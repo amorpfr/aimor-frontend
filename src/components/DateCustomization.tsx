@@ -42,7 +42,8 @@ const DateCustomization: React.FC<DateCustomizationProps> = ({ profileData, upda
     { id: 'sunny', label: 'Sunny', icon: '☀️', color: 'from-yellow-400 to-orange-500' },
     { id: 'cloudy', label: 'Cloudy', icon: '☁️', color: 'from-gray-400 to-gray-600' },
     { id: 'rainy', label: 'Rainy', icon: '🌧️', color: 'from-blue-400 to-indigo-600' },
-    { id: 'snowy', label: 'Snowy', icon: '❄️', color: 'from-blue-200 to-white' }
+    { id: 'snowy', label: 'Snowy', icon: '❄️', color: 'from-blue-200 to-white' },
+    { id: 'unknown', label: "I don't know", icon: '🤷', color: 'from-purple-400 to-pink-500' }
   ];
 
   const handleSubmit = () => {
