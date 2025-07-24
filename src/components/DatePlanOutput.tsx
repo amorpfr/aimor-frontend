@@ -236,7 +236,7 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({ profileData }) => {
             animate={{ opacity: 1, height: 'auto' }}
           >
             <div className="space-y-3">
-              <h4 className="text-lg font-semibold text-white mb-3">Why AI thinks this is a good date:</h4>
+              <h4 className="text-lg font-semibold text-white mb-3">Why AI-more.me thinks this is a good date:</h4>
               <div className="space-y-2">
                 <p className="text-white/80 flex items-start gap-2">
                   <span className="text-green-400">✓</span>
