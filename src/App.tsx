@@ -5,8 +5,9 @@ import ProfileInput from './components/ProfileInput';
 import DateCustomization from './components/DateCustomization';
 import AIProcessing from './components/AIProcessing';
 import DatePlanOutput from './components/DatePlanOutput';
+import HowItWorks from './components/HowItWorks';
 
-type Screen = 'onboarding' | 'profile' | 'customization' | 'processing' | 'output';
+type Screen = 'onboarding' | 'profile' | 'customization' | 'processing' | 'output' | 'how-it-works';
 
 interface ProfileData {
   person1: {
@@ -65,6 +66,10 @@ function App() {
 
   const goToStart = () => {
     setCurrentScreen('onboarding');
+  };
+
+  const goToHowItWorks = () => {
+    setCurrentScreen('how-it-works');
   };
 
   const updateProfileData = (data: Partial<ProfileData>) => {
@@ -140,12 +145,24 @@ function App() {
         )}
 
         <nav className="hidden md:flex space-x-6">
-          <a href="#" className="text-white/80 hover:text-white transition-colors">How it works</a>
+          <motion.button
+            className="text-white/80 hover:text-white transition-colors"
+            onClick={goToHowItWorks}
+            whileHover={{ scale: 1.05 }}
+          >
+            How it works
+          </motion.button>
         </nav>
 
         {/* Mobile Navigation */}
         <nav className="flex md:hidden">
-          <a href="#" className="text-white/80 hover:text-white transition-colors text-sm">How it works</a>
+          <motion.button
+            className="text-white/80 hover:text-white transition-colors text-sm"
+            onClick={goToHowItWorks}
+            whileHover={{ scale: 1.05 }}
+          >
+            How it works
+          </motion.button>
         </nav>
       </motion.header>
 
@@ -178,6 +195,9 @@ function App() {
           )}
           {currentScreen === 'output' && (
             <DatePlanOutput key="output" profileData={profileData} />
+          )}
+          {currentScreen === 'how-it-works' && (
+            <HowItWorks key="how-it-works" onBack={goToStart} />
           )}
         </AnimatePresence>
       </main>
