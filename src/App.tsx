@@ -67,7 +67,8 @@ function App() {
       location: "amsterdam",
       time_of_day: "afternoon",
       duration: "6-8",
-      date_type: "first"
+      date_type: "first",
+      season: "none"
     },
     person1: {
       description: "28F Amsterdam local, museum hopper by day, karaoke queen by night. Coffee addict who thinks art galleries are the perfect first date spot.",
