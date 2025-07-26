@@ -4,9 +4,10 @@ import { Heart, Sparkles, User } from 'lucide-react';
 
 interface OnboardingScreenProps {
   onNext: () => void;
+  onDemo?: () => void;
 }
 
-const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onNext }) => {
+const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onNext, onDemo }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [showCTA, setShowCTA] = useState(false);
 
@@ -170,6 +171,16 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onNext }) => {
             whileTap={{ scale: 4, opacity: 0 }}
             transition={{ duration: 0.3 }}
           />
+        </motion.button>
+
+        {/* Demo Button */}
+        <motion.button
+          className="text-white/60 hover:text-white/80 transition-colors text-sm underline"
+          onClick={onDemo}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          View demo result
         </motion.button>
       </motion.div>
 
