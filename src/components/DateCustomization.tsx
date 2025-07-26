@@ -47,12 +47,13 @@ const DateCustomization: React.FC<DateCustomizationProps> = ({ profileData, upda
   ];
 
   const handleSubmit = () => {
-    updateProfileData({ 
-      dateType, 
-      location, 
-      time_of_day: timeOfDay,
-      duration,
-      season: weather 
+    updateProfileData({
+      context: {
+        location,
+        time_of_day: timeOfDay,
+        duration,
+        date_type: dateType
+      }
     });
     onNext();
   };

@@ -10,8 +10,18 @@ interface ProfileInputProps {
 }
 
 const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileData, onNext, onBack }) => {
-  const [person1Data, setPerson1Data] = useState(profileData.person1);
-  const [person2Data, setPerson2Data] = useState(profileData.person2);
+  const [person1Data, setPerson1Data] = useState({
+    description: profileData.person1?.description || '',
+    instagram: profileData.person1?.instagram || '',
+    vibes: profileData.person1?.vibes || [],
+    image_data: null as string | null
+  });
+  const [person2Data, setPerson2Data] = useState({
+    description: profileData.person2?.description || '',
+    instagram: profileData.person2?.instagram || '',
+    vibes: profileData.person2?.vibes || [],
+    image_data: null as string | null
+  });
   const [activeTab, setActiveTab] = useState<'person1' | 'person2'>('person1');
   const [dragActive, setDragActive] = useState(false);
   const [aiScanning, setAiScanning] = useState(false);
@@ -78,13 +88,50 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
     }
   };
 
+  const handleImageUpload = (person: 'person1' | 'person2', file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      // Remove the data:image/...;base64, prefix to get just the base64 string
+      const base64String = result.split(',')[1];
+      
+      if (person === 'person1') {
+        setPerson1Data(prev => ({ ...prev, image_data: base64String }));
+      } else {
+        setPerson2Data(prev => ({ ...prev, image_data: base64String }));
+      }
+    };
+    reader.readAsDataURL(file);
+  };
   const handleSubmit = () => {
     if (!person1Data.description || !person2Data.description) {
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
       return;
     }
-    updateProfileData({ person1: person1Data, person2: person2Data });
+    
+    // Update both API format and legacy format for UI compatibility
+    updateProfileData({ 
+      profile_a: {
+        text: person1Data.description,
+        image_data: person1Data.image_data
+      },
+      profile_b: {
+        text: person2Data.description,
+        image_data: person2Data.image_data
+      },
+      // Keep legacy format for UI compatibility
+      person1: {
+        description: person1Data.description,
+        instagram: person1Data.instagram,
+        vibes: person1Data.vibes
+      },
+      person2: {
+        description: person2Data.description,
+        instagram: person2Data.instagram,
+        vibes: person2Data.vibes
+      }
+    });
     onNext();
   };
 
@@ -210,7 +257,10 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
                 accept="image/*"
                 className="hidden"
                 onChange={(e) => {
-                  // Handle file upload
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    handleImageUpload('person1', file);
+                  }
                 }}
                 multiple
               />
@@ -324,6 +374,18 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
             <motion.div
               className="border-2 border-dashed border-white/30 rounded-xl p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-400/10 transition-all"
               whileHover={{ scale: 1.02 }}
+             onClick={() => {
+               const input = document.createElement('input');
+               input.type = 'file';
+               input.accept = 'image/*';
+               input.onchange = (e) => {
+                 const file = (e.target as HTMLInputElement).files?.[0];
+                 if (file) {
+                   handleImageUpload('person2', file);
+                 }
+               };
+               input.click();
+             }}
             >
               <Upload className="w-5 h-5 md:w-8 md:h-8 text-white/60 mx-auto mb-1 md:mb-3" />
               <p className="text-white/80 text-xs md:text-base">Upload photos (optional)</p>

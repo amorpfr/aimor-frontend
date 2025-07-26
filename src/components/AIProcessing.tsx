@@ -3,14 +3,18 @@ import { motion } from 'framer-motion';
 import { Brain, Zap } from 'lucide-react';
 
 interface AIProcessingProps {
+  profileData: any;
   onNext: () => void;
 }
 
-const AIProcessing: React.FC<AIProcessingProps> = ({ onNext }) => {
+const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
   const [progress, setProgress] = useState(0);
   const [currentTask, setCurrentTask] = useState(0);
   const [brainClicks, setBrainClicks] = useState(0);
   const [playingMusic, setPlayingMusic] = useState(false);
+  const [requestId, setRequestId] = useState<string | null>(null);
+  const [apiProgress, setApiProgress] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const tasks = [
     "Analyzing personality patterns...",
@@ -24,27 +28,75 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ onNext }) => {
   const emojis = ['🎨', '☕', '🎶', '🎭', '🌟', '💘'];
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        const newProgress = prev + Math.random() * 15 + 5;
-        if (newProgress >= 100) {
-          clearInterval(interval);
-          setTimeout(() => onNext(), 1000);
-          return 100;
+    const startProcessing = async () => {
+      try {
+        // Start the cultural date plan processing
+        const response = await fetch('https://aimor-api-8fd07f4d5603.herokuapp.com/start-cultural-date-plan', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(profileData),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return newProgress;
-      });
-    }, 800);
 
-    const taskInterval = setInterval(() => {
-      setCurrentTask(prev => (prev + 1) % tasks.length);
-    }, 1200);
+        const data = await response.json();
+        
+        if (!data.success) {
+          throw new Error(data.error || 'Failed to start processing');
+        }
 
-    return () => {
-      clearInterval(interval);
-      clearInterval(taskInterval);
+        setRequestId(data.request_id);
+        
+        // Start polling for progress
+        const pollInterval = setInterval(async () => {
+          try {
+            const progressResponse = await fetch(
+              `https://aimor-api-8fd07f4d5603.herokuapp.com/date-plan-progress/${data.request_id}`
+            );
+
+            if (!progressResponse.ok) {
+              throw new Error(`Progress polling failed: ${progressResponse.status}`);
+            }
+
+            const progressData = await progressResponse.json();
+            setApiProgress(progressData);
+            
+            // Update UI progress
+            setProgress(progressData.overall_progress || 0);
+            setCurrentTask(Math.max(0, (progressData.current_step || 1) - 1));
+            
+            // Check if complete
+            if (progressData.status === 'complete' && progressData.final_results_available) {
+              clearInterval(pollInterval);
+              setTimeout(() => {
+                onNext(progressData.complete_date_plan);
+              }, 1000);
+            } else if (progressData.status === 'error') {
+              clearInterval(pollInterval);
+              setError('Processing failed. Please try again.');
+            }
+          } catch (pollError) {
+            console.error('Polling error:', pollError);
+            setError('Connection error. Please try again.');
+            clearInterval(pollInterval);
+          }
+        }, 2000);
+
+        // Cleanup function
+        return () => clearInterval(pollInterval);
+        
+      } catch (err) {
+        console.error('Failed to start processing:', err);
+        setError('Failed to start processing. Please try again.');
+      }
     };
-  }, [onNext]);
+
+    startProcessing();
+  }, [profileData, onNext]);
 
   const handleBrainClick = () => {
     setBrainClicks(prev => prev + 1);
@@ -137,7 +189,9 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ onNext }) => {
           <Zap className="w-6 h-6 text-yellow-400" />
           AI Processing
         </h2>
-        <p className="text-white/80 text-lg">{tasks[currentTask]}</p>
+        <p className="text-white/80 text-lg">
+          {apiProgress?.steps?.[String(currentTask + 1)]?.preview || tasks[currentTask]}
+        </p>
       </motion.div>
 
       {/* Progress Bar */}
@@ -167,6 +221,45 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ onNext }) => {
           <span className="text-white/60 text-sm">{Math.round(progress)}%</span>
         </div>
       </div>
+
+      {/* Cultural Previews */}
+      {apiProgress?.cultural_previews && apiProgress.cultural_previews.length > 0 && (
+        <motion.div
+          className="w-full max-w-md mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+            <h3 className="text-white font-medium mb-2">Cultural Insights:</h3>
+            <div className="space-y-1">
+              {apiProgress.cultural_previews.slice(-3).map((preview: string, index: number) => (
+                <motion.p
+                  key={index}
+                  className="text-white/70 text-sm"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  {preview}
+                </motion.p>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Error Display */}
+      {error && (
+        <motion.div
+          className="w-full max-w-md mb-8"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <div className="bg-red-500/20 border border-red-400/30 rounded-xl p-4">
+            <p className="text-red-300 text-center">{error}</p>
+          </div>
+        </motion.div>
+      )}
 
       {/* Easter Egg - Music Player */}
       {playingMusic && (

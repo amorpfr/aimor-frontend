@@ -10,32 +10,44 @@ import HowItWorks from './components/HowItWorks';
 type Screen = 'onboarding' | 'profile' | 'customization' | 'processing' | 'output' | 'how-it-works';
 
 interface ProfileData {
-  person1: {
+  profile_a: {
+    text: string;
+    image_data: string | null;
+  };
+  profile_b: {
+    text: string;
+    image_data: string | null;
+  };
+  context: {
+    location: string;
+    time_of_day: string;
+    duration: string;
+    date_type: string;
+  };
+  // Keep legacy fields for UI compatibility
+  person1?: {
     description: string;
-    image?: File;
     instagram: string;
     vibes: string[];
   };
-  person2: {
+  person2?: {
     description: string;
-    image?: File;
     instagram: string;
     vibes: string[];
   };
-  dateType: string;
-  location: string;
-  weather: string;
 }
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('onboarding');
   const [profileData, setProfileData] = useState<ProfileData>({
+    profile_a: { text: '', image_data: null },
+    profile_b: { text: '', image_data: null },
+    context: { location: '', time_of_day: '', duration: '', date_type: '' },
+    // Legacy fields for UI compatibility
     person1: { description: '', instagram: '', vibes: [] },
-    person2: { description: '', instagram: '', vibes: [] },
-    dateType: '',
-    location: '',
-    weather: ''
+    person2: { description: '', instagram: '', vibes: [] }
   });
+  const [completeDatePlan, setCompleteDatePlan] = useState<any>(null);
   const [logoClicks, setLogoClicks] = useState(0);
   const [godMode, setGodMode] = useState(false);
 
@@ -76,6 +88,10 @@ function App() {
     setProfileData(prev => ({ ...prev, ...data }));
   };
 
+  const handleProcessingComplete = (datePlan: any) => {
+    setCompleteDatePlan(datePlan);
+    nextScreen();
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-600 via-purple-600 to-green-600 relative overflow-hidden">
       {/* Background Animation */}
@@ -191,10 +207,18 @@ function App() {
             />
           )}
           {currentScreen === 'processing' && (
-            <AIProcessing key="processing" onNext={nextScreen} />
+            <AIProcessing 
+              key="processing" 
+              profileData={profileData}
+              onNext={handleProcessingComplete} 
+            />
           )}
           {currentScreen === 'output' && (
-            <DatePlanOutput key="output" profileData={profileData} />
+            <DatePlanOutput 
+              key="output" 
+              profileData={profileData}
+              completeDatePlan={completeDatePlan}
+            />
           )}
           {currentScreen === 'how-it-works' && (
             <HowItWorks key="how-it-works" onBack={goToStart} />
