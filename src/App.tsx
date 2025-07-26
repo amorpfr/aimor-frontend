@@ -116,6 +116,8 @@ function App() {
   };
 
   const goToDemo = () => {
+    console.log('Setting demo data:', demoProfileData);
+    console.log('Setting demo API result:', demoApiResult);
     setProfileData(demoProfileData);
     setCompleteDatePlan(demoApiResult);
     setCurrentScreen('output');
