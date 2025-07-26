@@ -73,7 +73,7 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
             if (progressData.status === 'complete' && progressData.final_results_available) {
               clearInterval(pollInterval);
               setTimeout(() => {
-                onNext(progressData.complete_date_plan);
+                onNext(progressData);
               }, 1000);
             } else if (progressData.status === 'error') {
               clearInterval(pollInterval);
