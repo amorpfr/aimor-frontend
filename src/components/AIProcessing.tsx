@@ -254,7 +254,16 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
                   transition={{ delay: 0, duration: 0.3 }}
                   layout
                 >
-                  {preview}
+                  {(() => {
+                    // Add Qloo API attribution to specific steps in the loading updates box
+                    if (preview.includes('Discovered') && preview.includes('cross-domain') && !preview.includes('by Qloo')) {
+                      return `${preview} by Qloo's API`;
+                    }
+                    if (preview.includes('Selected') && preview.includes('venues') && !preview.includes('by Qloo')) {
+                      return `${preview} by Qloo's API`;
+                    }
+                    return preview;
+                  })()}
                 </motion.p>
               ))}
             </div>
