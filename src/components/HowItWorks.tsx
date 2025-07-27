@@ -176,7 +176,7 @@ meaning and mood."`,
         >
           <span className="text-4xl">🧠</span>
           <h1 className="text-4xl md:text-5xl font-bold text-white">
-            How AI-More.me Works
+            How DateGPT Works
           </h1>
         </motion.div>
         

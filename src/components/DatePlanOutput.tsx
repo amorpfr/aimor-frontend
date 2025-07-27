@@ -107,7 +107,7 @@ ${compatibilityText}
 
 ${'═'.repeat(40)}
 
-✨ Created with AI-More.me - Your date, designed for connection`;
+✨ Created with DateGPT - Your date, designed for connection`;
   };
 
   const shareToWhatsApp = () => {
@@ -293,11 +293,11 @@ ${'═'.repeat(40)}
       ctx.textAlign = 'center';
       ctx.font = '14px Arial';
       ctx.fillStyle = '#9CA3AF';
-      ctx.fillText('Created with AI-More.me - Your date, designed for connection', canvas.width / 2, canvas.height - 30);
+      ctx.fillText('Created with DateGPT - Your date, designed for connection', canvas.width / 2, canvas.height - 30);
 
       // Download the image
       const link = document.createElement('a');
-      link.download = `date-plan-${datePlan.theme.toLowerCase().replace(/\s+/g, '-')}.png`;
+      link.download = `date-plan-${datePlan.theme.toLowerCase().replace(/\s+/g, '-')}-dategpt.png`;
       link.href = canvas.toDataURL();
       link.click();
     } catch (error) {

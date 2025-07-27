@@ -127,7 +127,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onNext, onDemo }) =
             className="inline-block bg-gradient-to-r from-pink-400 to-red-400 bg-clip-text text-transparent"
             whileHover={{ scale: 1.05, textShadow: "0 0 20px rgba(236, 72, 153, 0.5)" }}
           >
-            AI-More.me
+            DateGPT
           </motion.span>
         </h1>
         

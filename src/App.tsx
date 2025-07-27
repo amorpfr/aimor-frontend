@@ -185,7 +185,7 @@ function App() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <span className="text-white font-bold text-xl">AI-More.me</span>
+          <span className="text-white font-bold text-xl">DateGPT</span>
         </motion.div>
 
         {godMode && (
