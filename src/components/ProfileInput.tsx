@@ -263,10 +263,6 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
                 <p className="text-white/50 text-xs">Connect Instagram for deeper personality insights</p>
               </div>
             </div>
-            
-            <div className="mt-4 text-center">
-              <p className="text-yellow-300/80 text-xs font-medium">🚀 Enhanced AI matching coming soon!</p>
-            </div>
           </div>
         </motion.div>
         )}
@@ -380,10 +376,6 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
                 </div>
                 <p className="text-white/50 text-xs">Connect Instagram for deeper personality insights</p>
               </div>
-            </div>
-            
-            <div className="mt-4 text-center">
-              <p className="text-yellow-300/80 text-xs font-medium">🚀 Enhanced AI matching coming soon!</p>
             </div>
           </div>
         </motion.div>

@@ -63,12 +63,12 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({
   const generateShareText = () => {
     const activitiesText = activities.map((activity: any, index: number) => {
       const whatToDo = activity.what_to_do?.slice(0, 2).map((item: string) => `   • ${item}`).join('\n') || '';
-      const conversationTopics = activity.conversation_topics?.slice(0, 2).map((topic: string) => `   💬 ${topic}`).join('\n') || '';
+      const conversationTopics = activity.conversation_topics?.slice(0, 2).map((topic: string) => `   - ${topic}`).join('\n') || '';
       
       return `${index + 1}. ${activity.name}
-⏰ ${activity.time_slot}
-📍 ${activity.location_name}
-🗺️ ${activity.google_maps_link || 'Location details in app'}
+Time: ${activity.time_slot}
+Location: ${activity.location_name}
+Maps: ${activity.google_maps_link || 'Location details in app'}
 
 What to do:
 ${whatToDo}
@@ -76,23 +76,23 @@ ${whatToDo}
 Conversation starters:
 ${conversationTopics}
 
-💡 Why this works: ${activity.why_recommended}`;
+Why this works: ${activity.why_recommended}`;
     }).join('\n\n' + '─'.repeat(30) + '\n\n');
 
     const logisticsText = `
-🚶‍♀️ Walking: ${logistics?.total_walking_distance || 'Short distances'}
-🚌 Transport: ${logistics?.transport_needed || 'Walking only'}
-⚡ Energy: ${logistics?.energy_level || 'Moderate'}`;
+Walking: ${logistics?.total_walking_distance || 'Short distances'}
+Transport: ${logistics?.transport_needed || 'Walking only'}
+Energy: ${logistics?.energy_level || 'Moderate'}`;
 
     const compatibilityText = reasoning?.compatibility_analysis?.strengths?.slice(0, 2)
-      .map((strength: string) => `✓ ${strength}`)
+      .map((strength: string) => `- ${strength}`)
       .join('\n') || '';
 
-    return `🎯 Our Perfect Date Plan: ${datePlan.theme}
+    return `Our Perfect Date Plan: ${datePlan.theme}
 
-📅 ${datePlan.start_time} - ${datePlan.end_time} • ${datePlan.actual_hours} hours in ${datePlan.location_city}
-💝 Compatibility: ${compatibilityScore}% | Success Rate: ${successProbability}%
-💰 ${budgetText}
+Date: ${datePlan.start_time} - ${datePlan.end_time} (${datePlan.actual_hours} hours in ${datePlan.location_city})
+Compatibility: ${compatibilityScore}% | Success Rate: ${successProbability}%
+Budget: ${budgetText}
 
 ${'═'.repeat(40)}
 
@@ -100,14 +100,14 @@ ${activitiesText}
 
 ${'═'.repeat(40)}
 
-📋 LOGISTICS:${logisticsText}
+LOGISTICS:${logisticsText}
 
-💪 WHY THIS WILL WORK:
+WHY THIS WILL WORK:
 ${compatibilityText}
 
 ${'═'.repeat(40)}
 
-✨ Created with DateGPT - Your date, designed for connection`;
+Created with DateGPT - Your date, designed for connection`;
   };
 
   const shareToWhatsApp = () => {
