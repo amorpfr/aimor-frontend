@@ -18,7 +18,7 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
 
   const tasks = [
     "Analyzing personality patterns...",
-    "Decoding cultural cues from P2's meme stash by Qloo's API...",
+    "Decoding cultural cues by Qloo's API...",
     "Cross-referencing local hotspots...",
     "Calculating conversation spark potential...",
     "Optimizing for mutual weirdness by Qloo's API...",
@@ -190,7 +190,20 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
           AI Processing
         </h2>
         <p className="text-white/80 text-lg">
-          {apiProgress?.steps?.[String(currentTask + 1)]?.preview || tasks[currentTask]}
+          {(() => {
+            const stepPreview = apiProgress?.steps?.[String(currentTask + 1)]?.preview;
+            if (stepPreview) {
+              // For steps 2 and 5, add Qloo API attribution
+              if (currentTask === 1) { // Step 2
+                return stepPreview.includes('by Qloo') ? stepPreview : `${stepPreview} by Qloo's API`;
+              }
+              if (currentTask === 4) { // Step 5
+                return stepPreview.includes('by Qloo') ? stepPreview : `${stepPreview} by Qloo's API`;
+              }
+              return stepPreview;
+            }
+            return tasks[currentTask];
+          })()}
         </p>
       </motion.div>
 
