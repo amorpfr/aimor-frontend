@@ -642,7 +642,7 @@ ${'═'.repeat(40)}
           {/* Share Options */}
           {showShareOptions && (
             <motion.div
-              className="absolute top-full left-1/2 transform -translate-x-1/2 mt-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-4 z-10"
+              className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-4 z-10"
               initial={{ opacity: 0, y: -10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
