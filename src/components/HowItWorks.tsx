@@ -7,7 +7,6 @@ interface HowItWorksProps {
   onDemo?: () => void;
 }
 
-const HowItWorks: React.FC<HowItWorksProps> = ({ onBack }) => {
 const HowItWorks: React.FC<HowItWorksProps> = ({ onBack, onDemo }) => {
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
 
