@@ -68,6 +68,7 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({
       return `${index + 1}. ${activity.name}
 ⏰ ${activity.time_slot}
 📍 ${activity.location_name}
+🗺️ ${activity.google_maps_link || 'Location details in app'}
 
 What to do:
 ${whatToDo}
