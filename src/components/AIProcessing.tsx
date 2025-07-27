@@ -299,7 +299,7 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
         transition={{ delay: 3 }}
       >
         <p className="text-white/40 text-xs">
-          This costs max 1.5 minute
+          This won't take more than 1.5 minutes
         </p>
       </motion.div>
     </motion.div>
