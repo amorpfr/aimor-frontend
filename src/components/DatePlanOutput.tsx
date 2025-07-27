@@ -124,8 +124,8 @@ ${'═'.repeat(40)}
       if (!ctx) return;
 
       // Set canvas size
-      canvas.width = 800;
-      canvas.height = 1200;
+      canvas.width = 900;
+      canvas.height = 1600;
 
       // Background gradient
       const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
@@ -172,16 +172,24 @@ ${'═'.repeat(40)}
         ctx.fillText(`⏰ ${activity.time_slot}`, 70, yPos + 25);
         ctx.fillText(`📍 ${activity.location_name}`, 70, yPos + 45);
         
+        // Add Google Maps link if available
+        if (activity.google_maps_link) {
+          ctx.fillText(`🗺️ ${activity.google_maps_link}`, 70, yPos + 65);
+        }
+        
         ctx.fillStyle = 'white';
         ctx.font = '12px Arial';
-        const words = activity.why_recommended.split(' ');
-        let line = '';
-        let lineY = yPos + 70;
         
-        words.forEach((word: string) => {
+        // Why recommended
+        ctx.fillText('💡 Why this works:', 70, yPos + 90);
+        const whyWords = activity.why_recommended.split(' ');
+        let line = '';
+        let lineY = yPos + 110;
+        
+        whyWords.forEach((word: string) => {
           const testLine = line + word + ' ';
           const metrics = ctx.measureText(testLine);
-          if (metrics.width > 700 && line !== '') {
+          if (metrics.width > 750 && line !== '') {
             ctx.fillText(line, 70, lineY);
             line = word + ' ';
             lineY += 20;
@@ -191,15 +199,101 @@ ${'═'.repeat(40)}
         });
         ctx.fillText(line, 70, lineY);
         
-        yPos += 140;
+        // What to do section
+        lineY += 30;
+        ctx.fillText('✅ What to do:', 70, lineY);
+        lineY += 20;
+        
+        activity.what_to_do?.slice(0, 2).forEach((item: string) => {
+          const itemWords = `• ${item}`.split(' ');
+          let itemLine = '';
+          
+          itemWords.forEach((word: string) => {
+            const testLine = itemLine + word + ' ';
+            const metrics = ctx.measureText(testLine);
+            if (metrics.width > 750 && itemLine !== '') {
+              ctx.fillText(itemLine, 90, lineY);
+              itemLine = word + ' ';
+              lineY += 18;
+            } else {
+              itemLine = testLine;
+            }
+          });
+          ctx.fillText(itemLine, 90, lineY);
+          lineY += 25;
+        });
+        
+        // Conversation topics
+        ctx.fillText('💬 Conversation starters:', 70, lineY);
+        lineY += 20;
+        
+        activity.conversation_topics?.slice(0, 2).forEach((topic: string) => {
+          const topicWords = `• ${topic}`.split(' ');
+          let topicLine = '';
+          
+          topicWords.forEach((word: string) => {
+            const testLine = topicLine + word + ' ';
+            const metrics = ctx.measureText(testLine);
+            if (metrics.width > 750 && topicLine !== '') {
+              ctx.fillText(topicLine, 90, lineY);
+              topicLine = word + ' ';
+              lineY += 18;
+            } else {
+              topicLine = testLine;
+            }
+          });
+          ctx.fillText(topicLine, 90, lineY);
+          lineY += 25;
+        });
+        
+        yPos = lineY + 40;
         ctx.fillStyle = 'white';
+      });
+
+      // Logistics section
+      ctx.font = 'bold 18px Arial';
+      ctx.fillText('📋 Logistics:', 50, yPos);
+      yPos += 30;
+      
+      ctx.font = '14px Arial';
+      ctx.fillStyle = '#E5E7EB';
+      ctx.fillText(`🚶‍♀️ Walking: ${logistics?.total_walking_distance || 'Short distances'}`, 70, yPos);
+      ctx.fillText(`🚌 Transport: ${logistics?.transport_needed || 'Walking only'}`, 70, yPos + 25);
+      ctx.fillText(`⚡ Energy: ${logistics?.energy_level || 'Moderate'}`, 70, yPos + 50);
+      
+      yPos += 90;
+      
+      // Why this will work section
+      ctx.fillStyle = 'white';
+      ctx.font = 'bold 18px Arial';
+      ctx.fillText('💪 Why This Will Work:', 50, yPos);
+      yPos += 30;
+      
+      ctx.font = '12px Arial';
+      reasoning?.compatibility_analysis?.strengths?.slice(0, 2).forEach((strength: string) => {
+        const strengthWords = `✓ ${strength}`.split(' ');
+        let strengthLine = '';
+        
+        strengthWords.forEach((word: string) => {
+          const testLine = strengthLine + word + ' ';
+          const metrics = ctx.measureText(testLine);
+          if (metrics.width > 750 && strengthLine !== '') {
+            ctx.fillText(strengthLine, 70, yPos);
+            strengthLine = word + ' ';
+            yPos += 18;
+          } else {
+            strengthLine = testLine;
+          }
+        });
+        ctx.fillText(strengthLine, 70, yPos);
+        yPos += 25;
       });
 
       // Footer
       ctx.textAlign = 'center';
       ctx.font = '14px Arial';
       ctx.fillStyle = '#9CA3AF';
-      ctx.fillText('Created with AI-More.me', canvas.width / 2, canvas.height - 30);
+      ctx.fillText('Created with AI-More.me - Your date, designed for connection', canvas.width / 2, canvas.height - 30);
 
       // Download the image
       const link = document.createElement('a');
