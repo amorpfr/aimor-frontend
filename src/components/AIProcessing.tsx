@@ -223,6 +223,17 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
         ))}
       </motion.div>
 
+      {/* Processing Time Expectation */}
+      <motion.div
+        className="text-center mb-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+      >
+        <p className="text-white/50 text-sm">
+          This won't take more than 1.5 minutes
+        </p>
+      </motion.div>
       {/* Current Task */}
       <motion.div
         className="text-center mb-8"
@@ -291,9 +302,9 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
         >
           <div className="bg-white/5 rounded-xl p-6 border border-white/10">
             <h3 className="text-white font-medium mb-4">Loading Updates</h3>
-            <div className="space-y-2 min-h-[160px] max-h-[240px] overflow-y-auto">
+            <div className="space-y-3 min-h-[160px] max-h-[240px] overflow-y-auto">
               {getUniqueAndStablePreviews(apiProgress.cultural_previews)
-                .map((preview: string) => {
+                .map((preview: string, index: number) => {
                   // Process the preview text and attribution
                   let mainText = preview;
                   let attribution = '';
@@ -320,11 +331,11 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
                   
                   return (
                     <motion.div
-                      key={preview}
+                      key={`${index}-${preview.substring(0, 20)}`}
                       className="text-white/70 text-sm leading-relaxed"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0, duration: 0.3 }}
+                      transition={{ delay: index * 0.1, duration: 0.3 }}
                       layout
                     >
                       <span>{mainText}</span>
@@ -382,18 +393,6 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
       >
         Pro tip: Click the brain 3 times for a surprise 🎵
       </motion.p>
-
-      {/* Processing Time Footer */}
-      <motion.div
-        className="fixed bottom-4 left-1/2 transform -translate-x-1/2 text-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 3 }}
-      >
-        <p className="text-white/40 text-xs">
-          This won't take more than 1.5 minutes
-        </p>
-      </motion.div>
     </motion.div>
   );
 };
