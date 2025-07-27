@@ -156,10 +156,22 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({
                           <Clock className="w-4 h-4" />
                           {activity.time_slot}
                         </div>
-                        <div className="flex items-center gap-1">
-                          <MapPin className="w-4 h-4" />
-                          {activity.location_name}
-                        </div>
+                        {activity.google_maps_link ? (
+                          <a
+                            href={activity.google_maps_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 hover:text-white/90 transition-colors cursor-pointer"
+                          >
+                            <MapPin className="w-4 h-4" />
+                            {activity.location_name}
+                          </a>
+                        ) : (
+                          <div className="flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            {activity.location_name}
+                          </div>
+                        )}
                       </div>
                       <p className="text-white/80">{activity.why_recommended}</p>
                     </div>
