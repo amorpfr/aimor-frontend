@@ -261,7 +261,7 @@ function App() {
             />
           )}
           {currentScreen === 'how-it-works' && (
-            <HowItWorks key="how-it-works" onBack={goToStart} />
+            <HowItWorks key="how-it-works" onBack={goToStart} onDemo={goToDemo} />
           )}
         </AnimatePresence>
       </main>

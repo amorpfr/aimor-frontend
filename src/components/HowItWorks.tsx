@@ -4,9 +4,11 @@ import { Brain, Users, Heart, Calendar, MapPin, Sparkles, Globe, ChevronDown, Ch
 
 interface HowItWorksProps {
   onBack: () => void;
+  onDemo?: () => void;
 }
 
 const HowItWorks: React.FC<HowItWorksProps> = ({ onBack }) => {
+const HowItWorks: React.FC<HowItWorksProps> = ({ onBack, onDemo }) => {
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
 
   const steps = [
@@ -360,15 +362,14 @@ meaning and mood."`,
         <motion.button
           className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold py-4 px-8 rounded-full text-lg relative overflow-hidden group"
           onClick={() => {
-            // Navigate to demo - you'll need to pass this function from parent
-            window.location.hash = 'demo';
+            onDemo?.();
           }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           <span className="relative z-10 flex items-center gap-2">
             <Sparkles className="w-5 h-5" />
-            See Result Example
+            See Example Result
             <motion.div
               animate={{ x: [0, 5, 0] }}
               transition={{ duration: 1, repeat: Infinity }}
