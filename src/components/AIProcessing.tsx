@@ -225,20 +225,21 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
       {/* Cultural Previews */}
       {apiProgress?.cultural_previews && apiProgress.cultural_previews.length > 0 && (
         <motion.div
-          className="w-full max-w-md mb-8"
+          className="w-full max-w-lg mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-            <h3 className="text-white font-medium mb-2">Cultural Insights:</h3>
-            <div className="space-y-1">
-              {apiProgress.cultural_previews.slice(-3).map((preview: string, index: number) => (
+          <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <h3 className="text-white font-medium mb-4">Loading Updates:</h3>
+            <div className="space-y-2 min-h-[120px] max-h-[200px] overflow-y-auto">
+              {apiProgress.cultural_previews.map((preview: string, index: number) => (
                 <motion.p
                   key={index}
-                  className="text-white/70 text-sm"
+                  className="text-white/70 text-sm leading-relaxed"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: 0, duration: 0.3 }}
+                  layout
                 >
                   {preview}
                 </motion.p>
