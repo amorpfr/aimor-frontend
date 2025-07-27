@@ -73,7 +73,7 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({
 
 ${activitiesText}
 
-✨ Created with AI-More.me - The Tinder of Date Planning`;
+✨ Created with AI-More.me - Your date, designed for connection`;
   };
 
   const shareToWhatsApp = () => {
