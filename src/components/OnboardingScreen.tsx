@@ -174,14 +174,6 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onNext, onDemo }) =
         </motion.button>
 
         {/* Demo Button */}
-        <motion.button
-          className="text-white/60 hover:text-white/80 transition-colors text-sm underline"
-          onClick={onDemo}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          View demo result
-        </motion.button>
       </motion.div>
 
       {/* AI Provider Info */}
@@ -211,6 +203,23 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onNext, onDemo }) =
             OpenAI
           </a>
         </p>
+      </motion.div>
+
+      {/* Demo Link - Footer Position */}
+      <motion.div
+        className="fixed bottom-6 left-1/2 transform -translate-x-1/2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3 }}
+      >
+        <motion.button
+          className="text-white/40 hover:text-white/60 transition-colors text-xs underline"
+          onClick={onDemo}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          View demo result
+        </motion.button>
       </motion.div>
     </motion.div>
   );
