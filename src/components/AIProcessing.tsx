@@ -255,17 +255,38 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
                   layout
                 >
                   {(() => {
-                    // Add Qloo API attribution to specific steps in the loading updates box
+                    // Add API attributions to specific steps in the loading updates box
+                    
+                    // Step 1: Add OpenAI attribution for profile analysis
+                    if (preview.includes('personality profiles analyzed') && !preview.includes('by OpenAI')) {
+                      return `${preview} by OpenAI`;
+                    }
+                    
+                    // Step 2: Add Qloo API attribution for cultural discoveries
                     if (preview.includes('Discovered') && preview.includes('cross-domain') && !preview.includes('by Qloo')) {
                       return `${preview} by Qloo's API`;
                     }
+                    
+                    // Step 3: Add OpenAI attribution for compatibility calculation and fix twitching
+                    if (preview.includes('Real compatibility calculated') && !preview.includes('by OpenAI')) {
+                      // Only show the first compatibility result to avoid twitching
+                      if (apiProgress.cultural_previews.filter(p => p.includes('Real compatibility calculated')).indexOf(preview) === 0) {
+                        return `${preview} by OpenAI`;
+                      } else {
+                        // Skip duplicate compatibility messages
+                        return null;
+                      }
+                    }
+                    
+                    // Step 5: Add Qloo API attribution for venue selection
                     if (preview.includes('Selected') && preview.includes('venues') && !preview.includes('by Qloo')) {
                       return `${preview} by Qloo's API`;
                     }
+                    
                     return preview;
                   })()}
                 </motion.p>
-              ))}
+              )).filter(Boolean)}
             </div>
           </div>
         </motion.div>
