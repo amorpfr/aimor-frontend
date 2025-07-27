@@ -54,6 +54,9 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({
   const compatibilityScore = Math.round((reasoning?.compatibility_analysis?.score || 0.8) * 100);
   const successProbability = Math.round((reasoning?.success_prediction?.overall_probability || 0.82) * 100);
 
+  // Extract budget from logistics.cost_estimate
+  const budgetText = logistics?.cost_estimate || 'Cost estimate not available';
+
   return (
     <motion.div
       className="max-w-6xl mx-auto px-6 py-12"
@@ -112,10 +115,10 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({
           
           <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
             <div className="flex items-center gap-2 mb-2">
-              <Euro className="w-5 h-5 text-blue-400" />
+              <Euro className="w-5 h-5 text-green-400" />
               <span className="text-white/80 font-medium">Budget</span>
             </div>
-            <div className="text-2xl font-bold text-white">{logistics?.cost_estimate?.split(' ')[3] || '55-75'}€</div>
+            <div className="text-lg font-bold text-white">{budgetText}</div>
           </div>
         </motion.div>
       </div>
