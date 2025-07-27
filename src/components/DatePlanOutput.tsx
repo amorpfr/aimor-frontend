@@ -61,9 +61,31 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({
   const budgetText = logistics?.cost_estimate || 'Cost estimate not available';
 
   const generateShareText = () => {
-    const activitiesText = activities.map((activity: any, index: number) => 
-      `${index + 1}. ${activity.name} (${activity.time_slot})\n   📍 ${activity.location_name}`
-    ).join('\n\n');
+    const activitiesText = activities.map((activity: any, index: number) => {
+      const whatToDo = activity.what_to_do?.slice(0, 2).map((item: string) => `   • ${item}`).join('\n') || '';
+      const conversationTopics = activity.conversation_topics?.slice(0, 2).map((topic: string) => `   💬 ${topic}`).join('\n') || '';
+      
+      return `${index + 1}. ${activity.name}
+⏰ ${activity.time_slot}
+📍 ${activity.location_name}
+
+What to do:
+${whatToDo}
+
+Conversation starters:
+${conversationTopics}
+
+💡 Why this works: ${activity.why_recommended}`;
+    }).join('\n\n' + '─'.repeat(30) + '\n\n');
+
+    const logisticsText = `
+🚶‍♀️ Walking: ${logistics?.total_walking_distance || 'Short distances'}
+🚌 Transport: ${logistics?.transport_needed || 'Walking only'}
+⚡ Energy: ${logistics?.energy_level || 'Moderate'}`;
+
+    const compatibilityText = reasoning?.compatibility_analysis?.strengths?.slice(0, 2)
+      .map((strength: string) => `✓ ${strength}`)
+      .join('\n') || '';
 
     return `🎯 Our Perfect Date Plan: ${datePlan.theme}
 
@@ -71,7 +93,18 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({
 💝 Compatibility: ${compatibilityScore}% | Success Rate: ${successProbability}%
 💰 ${budgetText}
 
+${'═'.repeat(40)}
+
 ${activitiesText}
+
+${'═'.repeat(40)}
+
+📋 LOGISTICS:${logisticsText}
+
+💪 WHY THIS WILL WORK:
+${compatibilityText}
+
+${'═'.repeat(40)}
 
 ✨ Created with AI-More.me - Your date, designed for connection`;
   };
