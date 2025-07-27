@@ -135,19 +135,20 @@ meaning and mood."`,
     {
       number: 7,
       title: "Frontend Delivery",
-      subtitle: "FastAPI → Web UI",
+      subtitle: "FastAPI → Bolt.new UI",
       icon: <Globe className="w-6 h-6" />,
-      description: "The final curated output is delivered via API to the frontend UI.",
+      description: "The final curated output is delivered via API to the frontend UI built with Bolt.new.",
       details: [
-        "JSON formatted for mobile UI or chat output",
+        "JSON formatted for mobile UI built with Bolt.new",
         "Supports editable elements (time, vibe, budget)",
-        "Delivered in under 30 seconds with error fallback logic"
+        "Delivered in under 30 seconds with error fallback logic",
+        "Beautiful, responsive interface crafted with Bolt.new's AI-powered development"
       ],
       code: `// Final delivery to your screen
 {
   "status": "success",
   "delivery_time": "28 seconds",
-  "format": "mobile_optimized",
+  "format": "bolt_ui_optimized",
   "editable": true
 }`,
       color: "from-indigo-500 to-purple-500"
@@ -347,6 +348,41 @@ meaning and mood."`,
             </motion.div>
           ))}
         </div>
+      </motion.div>
+
+      {/* See Result Example Button */}
+      <motion.div
+        className="text-center mb-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.2 }}
+      >
+        <motion.button
+          className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold py-4 px-8 rounded-full text-lg relative overflow-hidden group"
+          onClick={() => {
+            // Navigate to demo - you'll need to pass this function from parent
+            window.location.hash = 'demo';
+          }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <span className="relative z-10 flex items-center gap-2">
+            <Sparkles className="w-5 h-5" />
+            See Result Example
+            <motion.div
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            >
+              ✨
+            </motion.div>
+          </span>
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-orange-500 to-yellow-500"
+            initial={{ x: "-100%" }}
+            whileHover={{ x: "100%" }}
+            transition={{ duration: 0.5 }}
+          />
+        </motion.button>
       </motion.div>
 
       {/* Back Button */}
