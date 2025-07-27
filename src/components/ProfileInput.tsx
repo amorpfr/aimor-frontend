@@ -231,59 +231,42 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
             </div>
           </div>
 
-          {/* Image Upload */}
-          <div className="mb-4 md:mb-6">
-            <label className="block text-white/90 font-medium mb-3">
-              Dating Profile Photos (Optional)
-            </label>
-            <motion.div
-              className={`relative border-2 border-dashed ${dragActive ? 'border-pink-400 bg-pink-400/10' : 'border-white/30'} rounded-xl p-8 text-center cursor-pointer transition-all`}
-              onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
-              onDragLeave={() => setDragActive(false)}
-              onDrop={(e) => {
-                e.preventDefault();
-                setDragActive(false);
-                // Handle file drop
-              }}
-              onClick={() => fileInputRef.current?.click()}
-              whileHover={{ scale: 1.02 }}
-            >
-              <Upload className="w-5 h-5 md:w-8 md:h-8 text-white/60 mx-auto mb-1 md:mb-3" />
-              <p className="text-white/80 text-xs md:text-base">Upload photos (optional)</p>
-              <p className="text-white/50 text-xs md:text-sm mt-1 hidden md:block">or click to browse</p>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    handleImageUpload('person1', file);
-                  }
-                }}
-                multiple
-              />
-            </motion.div>
-          </div>
-
-          {/* Instagram */}
-          <div>
-            <label className="block text-white/90 font-medium mb-3">
-              Instagram Handle (Coming Soon)
-            </label>
-            <div className="relative">
-              <Instagram className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-white/30" />
-              <input
-                type="text"
-                className="w-full bg-white/5 border border-white/20 rounded-xl pl-10 md:pl-12 pr-4 py-2 md:py-3 text-sm md:text-base text-white/50 placeholder-white/30 cursor-not-allowed transition-all"
-                placeholder="@username"
-                value=""
-                disabled
-              />
-              <Lock className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/30" />
+          {/* Premium Features Coming Soon */}
+          <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-xl p-4 md:p-6 border border-yellow-400/30">
+            <div className="flex items-center gap-2 mb-4">
+              <Sparkles className="w-5 h-5 text-yellow-400" />
+              <h3 className="text-lg font-bold text-yellow-300">Premium Features Coming Soon</h3>
             </div>
-            <p className="text-white/40 text-xs md:text-sm mt-2">Feature coming soon!</p>
+            
+            <div className="space-y-4">
+              {/* Dating Profile Photos */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Upload className="w-4 h-4 text-white/50" />
+                    <span className="text-white/70 font-medium text-sm">Dating Profile Photos</span>
+                  </div>
+                  <Lock className="w-4 h-4 text-white/30" />
+                </div>
+                <p className="text-white/50 text-xs">Upload multiple photos for better AI analysis</p>
+              </div>
+
+              {/* Instagram Handle */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Instagram className="w-4 h-4 text-white/50" />
+                    <span className="text-white/70 font-medium text-sm">Instagram Integration</span>
+                  </div>
+                  <Lock className="w-4 h-4 text-white/30" />
+                </div>
+                <p className="text-white/50 text-xs">Connect Instagram for deeper personality insights</p>
+              </div>
+            </div>
+            
+            <div className="mt-4 text-center">
+              <p className="text-yellow-300/80 text-xs font-medium">🚀 Enhanced AI matching coming soon!</p>
+            </div>
           </div>
         </motion.div>
         )}
@@ -366,50 +349,42 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
             </div>
           </div>
 
-          {/* Image Upload */}
-          <div className="mb-4 md:mb-6">
-            <label className="block text-white/90 font-medium mb-3">
-              Dating Profile Photos (Optional)
-            </label>
-            <motion.div
-              className="border-2 border-dashed border-white/30 rounded-xl p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-400/10 transition-all"
-              whileHover={{ scale: 1.02 }}
-             onClick={() => {
-               const input = document.createElement('input');
-               input.type = 'file';
-               input.accept = 'image/*';
-               input.onchange = (e) => {
-                 const file = (e.target as HTMLInputElement).files?.[0];
-                 if (file) {
-                   handleImageUpload('person2', file);
-                 }
-               };
-               input.click();
-             }}
-            >
-              <Upload className="w-5 h-5 md:w-8 md:h-8 text-white/60 mx-auto mb-1 md:mb-3" />
-              <p className="text-white/80 text-xs md:text-base">Upload photos (optional)</p>
-              <p className="text-white/50 text-xs md:text-sm mt-1 hidden md:block">or click to browse</p>
-            </motion.div>
-          </div>
-
-          {/* Instagram */}
-          <div>
-            <label className="block text-white/90 font-medium mb-3">
-              Instagram Handle (Coming Soon)
-            </label>
-            <div className="relative">
-              <Instagram className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-white/30" />
-              <input
-                type="text"
-                className="w-full bg-white/5 border border-white/20 rounded-xl pl-10 md:pl-12 pr-4 py-2 md:py-3 text-sm md:text-base text-white/50 placeholder-white/30 cursor-not-allowed transition-all"
-                placeholder="@username"
-                value=""
-                disabled
-              />
-              <Lock className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/30" />
+          {/* Premium Features Coming Soon */}
+          <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-xl p-4 md:p-6 border border-yellow-400/30">
+            <div className="flex items-center gap-2 mb-4">
+              <Sparkles className="w-5 h-5 text-yellow-400" />
+              <h3 className="text-lg font-bold text-yellow-300">Premium Features Coming Soon</h3>
             </div>
-            <p className="text-white/40 text-xs md:text-sm mt-2">Feature coming soon!</p>
+            
+            <div className="space-y-4">
+              {/* Dating Profile Photos */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Upload className="w-4 h-4 text-white/50" />
+                    <span className="text-white/70 font-medium text-sm">Dating Profile Photos</span>
+                  </div>
+                  <Lock className="w-4 h-4 text-white/30" />
+                </div>
+                <p className="text-white/50 text-xs">Upload multiple photos for better AI analysis</p>
+              </div>
+
+              {/* Instagram Handle */}
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Instagram className="w-4 h-4 text-white/50" />
+                    <span className="text-white/70 font-medium text-sm">Instagram Integration</span>
+                  </div>
+                  <Lock className="w-4 h-4 text-white/30" />
+                </div>
+                <p className="text-white/50 text-xs">Connect Instagram for deeper personality insights</p>
+              </div>
+            </div>
+            
+            <div className="mt-4 text-center">
+              <p className="text-yellow-300/80 text-xs font-medium">🚀 Enhanced AI matching coming soon!</p>
+            </div>
           </div>
         </motion.div>
         )}
