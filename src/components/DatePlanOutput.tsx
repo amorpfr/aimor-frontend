@@ -16,7 +16,9 @@ import {
   Sparkles,
   ExternalLink,
   ChevronRight,
-  CheckCircle
+  CheckCircle,
+  Download,
+  MessageSquare
 } from 'lucide-react';
 
 interface DatePlanOutputProps {
@@ -32,6 +34,7 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({
 }) => {
   const [activeActivity, setActiveActivity] = useState(0);
   const [showReasons, setShowReasons] = useState(false);
+  const [showShareOptions, setShowShareOptions] = useState(false);
 
   // Extract the date plan data
   const datePlan = completeDatePlan?.complete_date_plan?.final_date_plan?.date;
@@ -56,6 +59,124 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({
 
   // Extract budget from logistics.cost_estimate
   const budgetText = logistics?.cost_estimate || 'Cost estimate not available';
+
+  const generateShareText = () => {
+    const activitiesText = activities.map((activity: any, index: number) => 
+      `${index + 1}. ${activity.name} (${activity.time_slot})\n   📍 ${activity.location_name}`
+    ).join('\n\n');
+
+    return `🎯 Our Perfect Date Plan: ${datePlan.theme}
+
+📅 ${datePlan.start_time} - ${datePlan.end_time} • ${datePlan.actual_hours} hours in ${datePlan.location_city}
+💝 Compatibility: ${compatibilityScore}% | Success Rate: ${successProbability}%
+💰 ${budgetText}
+
+${activitiesText}
+
+✨ Created with AI-More.me - The Tinder of Date Planning`;
+  };
+
+  const shareToWhatsApp = () => {
+    const text = encodeURIComponent(generateShareText());
+    const whatsappUrl = `https://wa.me/?text=${text}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const saveAsImage = async () => {
+    try {
+      // Create a canvas element
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      // Set canvas size
+      canvas.width = 800;
+      canvas.height = 1200;
+
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, '#DC2626');
+      gradient.addColorStop(0.5, '#9333EA');
+      gradient.addColorStop(1, '#059669');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Set text styles
+      ctx.fillStyle = 'white';
+      ctx.textAlign = 'center';
+
+      // Title
+      ctx.font = 'bold 32px Arial';
+      ctx.fillText('Your Perfect Date Plan', canvas.width / 2, 60);
+
+      // Theme
+      ctx.font = 'bold 24px Arial';
+      ctx.fillText(datePlan.theme, canvas.width / 2, 100);
+
+      // Date info
+      ctx.font = '18px Arial';
+      ctx.fillText(`${datePlan.start_time} - ${datePlan.end_time} • ${datePlan.actual_hours} hours`, canvas.width / 2, 130);
+      ctx.fillText(`${datePlan.location_city}`, canvas.width / 2, 155);
+
+      // Stats
+      ctx.font = '16px Arial';
+      ctx.fillText(`Compatibility: ${compatibilityScore}% | Success Rate: ${successProbability}%`, canvas.width / 2, 190);
+      ctx.fillText(budgetText, canvas.width / 2, 215);
+
+      // Activities
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 20px Arial';
+      ctx.fillText('Activities:', 50, 270);
+
+      let yPos = 310;
+      activities.forEach((activity: any, index: number) => {
+        ctx.font = 'bold 18px Arial';
+        ctx.fillText(`${index + 1}. ${activity.name}`, 50, yPos);
+        
+        ctx.font = '14px Arial';
+        ctx.fillStyle = '#E5E7EB';
+        ctx.fillText(`⏰ ${activity.time_slot}`, 70, yPos + 25);
+        ctx.fillText(`📍 ${activity.location_name}`, 70, yPos + 45);
+        
+        ctx.fillStyle = 'white';
+        ctx.font = '12px Arial';
+        const words = activity.why_recommended.split(' ');
+        let line = '';
+        let lineY = yPos + 70;
+        
+        words.forEach((word: string) => {
+          const testLine = line + word + ' ';
+          const metrics = ctx.measureText(testLine);
+          if (metrics.width > 700 && line !== '') {
+            ctx.fillText(line, 70, lineY);
+            line = word + ' ';
+            lineY += 20;
+          } else {
+            line = testLine;
+          }
+        });
+        ctx.fillText(line, 70, lineY);
+        
+        yPos += 140;
+        ctx.fillStyle = 'white';
+      });
+
+      // Footer
+      ctx.textAlign = 'center';
+      ctx.font = '14px Arial';
+      ctx.fillStyle = '#9CA3AF';
+      ctx.fillText('Created with AI-More.me', canvas.width / 2, canvas.height - 30);
+
+      // Download the image
+      const link = document.createElement('a');
+      link.download = `date-plan-${datePlan.theme.toLowerCase().replace(/\s+/g, '-')}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    } catch (error) {
+      console.error('Error saving image:', error);
+      alert('Sorry, there was an error saving the image. Please try again.');
+    }
+  };
 
   return (
     <motion.div
@@ -365,36 +486,73 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({
 
       {/* Action Buttons */}
       <motion.div
-        className="flex flex-col sm:flex-row gap-4 justify-center"
+        className="flex flex-col gap-4 justify-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4 }}
       >
-        <motion.button
-          className="bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold py-3 px-8 rounded-full text-lg relative overflow-hidden group"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <span className="relative z-10 flex items-center gap-2">
-            <Share2 className="w-5 h-5" />
-            Share This Plan
-          </span>
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-blue-500 to-green-500"
-            initial={{ x: "-100%" }}
-            whileHover={{ x: "100%" }}
-            transition={{ duration: 0.5 }}
-          />
-        </motion.button>
+        {/* Share Button */}
+        <div className="relative">
+          <motion.button
+            className="bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold py-3 px-8 rounded-full text-lg relative overflow-hidden group mx-auto block"
+            onClick={() => setShowShareOptions(!showShareOptions)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="relative z-10 flex items-center gap-2">
+              <Share2 className="w-5 h-5" />
+              Share This Plan
+            </span>
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-blue-500 to-green-500"
+              initial={{ x: "-100%" }}
+              whileHover={{ x: "100%" }}
+              transition={{ duration: 0.5 }}
+            />
+          </motion.button>
+
+          {/* Share Options */}
+          {showShareOptions && (
+            <motion.div
+              className="absolute top-full left-1/2 transform -translate-x-1/2 mt-4 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-4 z-10"
+              initial={{ opacity: 0, y: -10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            >
+              <div className="flex flex-col gap-3 min-w-[200px]">
+                <motion.button
+                  className="flex items-center gap-3 text-white hover:text-green-400 transition-colors p-2 rounded-lg hover:bg-white/5"
+                  onClick={shareToWhatsApp}
+                  whileHover={{ x: 5 }}
+                >
+                  <MessageSquare className="w-5 h-5" />
+                  Share on WhatsApp
+                </motion.button>
+                
+                <motion.button
+                  className="flex items-center gap-3 text-white hover:text-blue-400 transition-colors p-2 rounded-lg hover:bg-white/5"
+                  onClick={saveAsImage}
+                  whileHover={{ x: 5 }}
+                >
+                  <Download className="w-5 h-5" />
+                  Save as Image
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </div>
         
-        <motion.button
-          className="bg-white/10 backdrop-blur-md text-white font-medium py-3 px-8 rounded-full border border-white/20 hover:bg-white/20 transition-colors"
-          onClick={onBack}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Create Another Date
-        </motion.button>
+        {/* Create Another Date Button */}
+        <div className="flex justify-center">
+          <motion.button
+            className="bg-white/10 backdrop-blur-md text-white font-medium py-3 px-8 rounded-full border border-white/20 hover:bg-white/20 transition-colors"
+            onClick={onBack}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Create Another Date
+          </motion.button>
+        </div>
       </motion.div>
     </motion.div>
   );
