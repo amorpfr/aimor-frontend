@@ -18,10 +18,10 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
 
   const tasks = [
     "Analyzing personality patterns...",
-    "Decoding cultural cues from P2's meme stash...",
+    "Decoding cultural cues from P2's meme stash by Qloo's API...",
     "Cross-referencing local hotspots...",
     "Calculating conversation spark potential...",
-    "Optimizing for mutual weirdness...",
+    "Optimizing for mutual weirdness by Qloo's API...",
     "Finalizing your perfect date..."
   ];
 
