@@ -208,9 +208,8 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onNext, onDemo }) =
       {/* Demo Link - Footer Position */}
       <motion.div
         className="fixed bottom-6 left-1/2 transform -translate-x-1/2"
-        initial={{ opacity: 0 }}
+        initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 3 }}
       >
         <motion.button
           className="text-white/40 hover:text-white/60 transition-colors text-xs underline"
