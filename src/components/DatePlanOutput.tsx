@@ -244,15 +244,16 @@ const DatePlanOutput: React.FC<DatePlanOutputProps> = ({
                     {/* Google Maps Link */}
                     {activity.google_maps_link && (
                       <div className="mt-4">
+                       <div className="text-white/60 text-sm mb-2">{activity.location_name}</div>
                         <a
                           href={activity.google_maps_link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 px-4 py-2 rounded-lg transition-colors"
+                         className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white/80 px-3 py-1.5 rounded-md text-sm transition-colors border border-white/10"
                         >
-                          <Navigation className="w-4 h-4" />
-                          Open in Google Maps
-                          <ExternalLink className="w-3 h-3" />
+                         <Navigation className="w-3 h-3" />
+                         View on Maps
+                         <ExternalLink className="w-2.5 h-2.5" />
                         </a>
                       </div>
                     )}
