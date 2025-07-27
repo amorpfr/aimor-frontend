@@ -16,6 +16,53 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
   const [apiProgress, setApiProgress] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Utility function to get unique and stable preview messages
+  const getUniqueAndStablePreviews = (previews: string[]): string[] => {
+    if (!previews || !Array.isArray(previews)) return [];
+    
+    const messageTypeMap = new Map<string, string>();
+    const exactDuplicates = new Set<string>();
+    const result: string[] = [];
+    
+    for (const preview of previews) {
+      // Skip if we've seen this exact string before
+      if (exactDuplicates.has(preview)) {
+        continue;
+      }
+      
+      // Determine message type and canonical key
+      let messageType: string | null = null;
+      
+      if (preview.includes('personality profiles analyzed') || preview.includes('profiles analyzed')) {
+        messageType = 'profile_analysis';
+      } else if (preview.includes('Discovered') && preview.includes('cross-domain')) {
+        messageType = 'cultural_discovery';
+      } else if (preview.includes('Real compatibility calculated') || preview.includes('compatibility calculated')) {
+        messageType = 'compatibility_calculation';
+      } else if (preview.includes('Selected') && preview.includes('venues')) {
+        messageType = 'venue_selection';
+      } else if (preview.includes('perfect') && preview.includes('date plan')) {
+        messageType = 'final_plan';
+      }
+      
+      // If we identified a message type
+      if (messageType) {
+        // Only add if we haven't seen this type before
+        if (!messageTypeMap.has(messageType)) {
+          messageTypeMap.set(messageType, preview);
+          result.push(preview);
+          exactDuplicates.add(preview);
+        }
+      } else {
+        // For unrecognized messages, add if not exact duplicate
+        result.push(preview);
+        exactDuplicates.add(preview);
+      }
+    }
+    
+    return result;
+  };
+
   const tasks = [
     "Analyzing personality patterns...",
     "Decoding cultural cues by Qloo's API...",
@@ -245,15 +292,8 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
           <div className="bg-white/5 rounded-xl p-6 border border-white/10">
             <h3 className="text-white font-medium mb-4">Loading Updates</h3>
             <div className="space-y-2 min-h-[160px] max-h-[240px] overflow-y-auto">
-              {apiProgress.cultural_previews
-                .filter((preview: string, index: number, array: string[]) => {
-                  // Filter out duplicate compatibility messages to prevent twitching
-                  if (preview.includes('Real compatibility calculated')) {
-                    return array.findIndex(p => p.includes('Real compatibility calculated')) === index;
-                  }
-                  return true;
-                })
-                .map((preview: string, index: number) => {
+              {getUniqueAndStablePreviews(apiProgress.cultural_previews)
+                .map((preview: string) => {
                   // Process the preview text and attribution
                   let mainText = preview;
                   let attribution = '';
@@ -280,7 +320,7 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
                   
                   return (
                     <motion.div
-                      key={`${index}-${mainText.substring(0, 20)}`}
+                      key={preview}
                       className="text-white/70 text-sm leading-relaxed"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
