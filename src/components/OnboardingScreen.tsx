@@ -179,9 +179,8 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onNext, onDemo }) =
       {/* AI Provider Info */}
       <motion.div
         className="text-center mt-8"
-        initial={{ opacity: 0 }}
+        initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2.5 }}
       >
         <p className="text-white/40 text-xs">
           Powered by{' '}
