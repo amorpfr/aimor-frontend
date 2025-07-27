@@ -27,8 +27,7 @@ const DateCustomization: React.FC<DateCustomizationProps> = ({ profileData, upda
   const timeOptions = [
     { id: 'morning', label: 'Morning (9-12)', icon: '🌅' },
     { id: 'afternoon', label: 'Afternoon (12-17)', icon: '☀️' },
-    { id: 'evening', label: 'Evening (17-21)', icon: '🌆' },
-    { id: 'night', label: 'Night (21+)', icon: '🌙' }
+    { id: 'evening', label: 'Evening (17-21)', icon: '🌆' }
   ];
 
   const durationOptions = [

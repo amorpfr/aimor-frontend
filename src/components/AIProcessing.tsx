@@ -225,13 +225,13 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
       {/* Cultural Previews */}
       {apiProgress?.cultural_previews && apiProgress.cultural_previews.length > 0 && (
         <motion.div
-          className="w-full max-w-lg mb-8"
+          className="w-full max-w-lg mb-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-            <h3 className="text-white font-medium mb-4">Loading Updates:</h3>
-            <div className="space-y-2 min-h-[120px] max-h-[200px] overflow-y-auto">
+            <h3 className="text-white font-medium mb-4">Loading Updates</h3>
+            <div className="space-y-2 min-h-[160px] max-h-[240px] overflow-y-auto">
               {apiProgress.cultural_previews.map((preview: string, index: number) => (
                 <motion.p
                   key={index}
@@ -283,13 +283,25 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
 
       {/* Tip */}
       <motion.p
-        className="text-white/50 text-sm text-center"
+        className="text-white/50 text-sm text-center mb-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2 }}
       >
         Pro tip: Click the brain 3 times for a surprise 🎵
       </motion.p>
+
+      {/* Processing Time Footer */}
+      <motion.div
+        className="fixed bottom-4 left-1/2 transform -translate-x-1/2 text-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3 }}
+      >
+        <p className="text-white/40 text-xs">
+          This costs max 1.5 minute
+        </p>
+      </motion.div>
     </motion.div>
   );
 };
