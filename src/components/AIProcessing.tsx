@@ -245,48 +245,57 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
           <div className="bg-white/5 rounded-xl p-6 border border-white/10">
             <h3 className="text-white font-medium mb-4">Loading Updates</h3>
             <div className="space-y-2 min-h-[160px] max-h-[240px] overflow-y-auto">
-              {apiProgress.cultural_previews.map((preview: string, index: number) => (
-                <motion.p
-                  key={index}
-                  className="text-white/70 text-sm leading-relaxed"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0, duration: 0.3 }}
-                  layout
-                >
-                  {(() => {
-                    // Add API attributions to specific steps in the loading updates box
-                    
-                    // Step 1: Add OpenAI attribution for profile analysis
-                    if (preview.includes('personality profiles analyzed') && !preview.includes('by OpenAI')) {
-                      return `${preview} by OpenAI`;
-                    }
-                    
-                    // Step 2: Add Qloo API attribution for cultural discoveries
-                    if (preview.includes('Discovered') && preview.includes('cross-domain') && !preview.includes('by Qloo')) {
-                      return `${preview} by Qloo's API`;
-                    }
-                    
-                    // Step 3: Add OpenAI attribution for compatibility calculation and fix twitching
-                    if (preview.includes('Real compatibility calculated') && !preview.includes('by OpenAI')) {
-                      // Only show the first compatibility result to avoid twitching
-                      if (apiProgress.cultural_previews.filter(p => p.includes('Real compatibility calculated')).indexOf(preview) === 0) {
-                        return `${preview} by OpenAI`;
-                      } else {
-                        // Skip duplicate compatibility messages
-                        return null;
-                      }
-                    }
-                    
-                    // Step 5: Add Qloo API attribution for venue selection
-                    if (preview.includes('Selected') && preview.includes('venues') && !preview.includes('by Qloo')) {
-                      return `${preview} by Qloo's API`;
-                    }
-                    
-                    return preview;
-                  })()}
-                </motion.p>
-              )).filter(Boolean)}
+              {apiProgress.cultural_previews
+                .filter((preview: string, index: number, array: string[]) => {
+                  // Filter out duplicate compatibility messages to prevent twitching
+                  if (preview.includes('Real compatibility calculated')) {
+                    return array.findIndex(p => p.includes('Real compatibility calculated')) === index;
+                  }
+                  return true;
+                })
+                .map((preview: string, index: number) => {
+                  // Process the preview text and attribution
+                  let mainText = preview;
+                  let attribution = '';
+                  
+                  // Step 1: Add OpenAI attribution for profile analysis
+                  if (preview.includes('personality profiles analyzed') && !preview.includes('by OpenAI')) {
+                    attribution = 'by OpenAI';
+                  }
+                  
+                  // Step 2: Add Qloo API attribution for cultural discoveries
+                  else if (preview.includes('Discovered') && preview.includes('cross-domain') && !preview.includes('by Qloo')) {
+                    attribution = "by Qloo's API";
+                  }
+                  
+                  // Step 3: Add OpenAI attribution for compatibility calculation
+                  else if (preview.includes('Real compatibility calculated') && !preview.includes('by OpenAI')) {
+                    attribution = 'by OpenAI';
+                  }
+                  
+                  // Step 5: Add Qloo API attribution for venue selection
+                  else if (preview.includes('Selected') && preview.includes('venues') && !preview.includes('by Qloo')) {
+                    attribution = "by Qloo's API";
+                  }
+                  
+                  return (
+                    <motion.div
+                      key={`${index}-${mainText.substring(0, 20)}`}
+                      className="text-white/70 text-sm leading-relaxed"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0, duration: 0.3 }}
+                      layout
+                    >
+                      <span>{mainText}</span>
+                      {attribution && (
+                        <span className="text-white/40 text-xs ml-2 font-light">
+                          {attribution}
+                        </span>
+                      )}
+                    </motion.div>
+                  );
+                })}
             </div>
           </div>
         </motion.div>
