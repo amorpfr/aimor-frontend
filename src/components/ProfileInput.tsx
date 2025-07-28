@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Upload, Instagram, Sparkles, CheckCircle, AlertCircle, Shuffle, Lock } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Upload, Instagram, Sparkles, CheckCircle, AlertCircle, Shuffle, Lock, ArrowLeft } from 'lucide-react';
 
 interface ProfileInputProps {
   profileData: any;
@@ -22,7 +22,7 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
     vibes: profileData.person2?.vibes || [],
     image_data: null as string | null
   });
-  const [activeTab, setActiveTab] = useState<'person1' | 'person2'>('person1');
+  const [currentStep, setCurrentStep] = useState<1 | 2>(1);
   const [dragActive, setDragActive] = useState(false);
   const [aiScanning, setAiScanning] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -103,36 +103,48 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
     };
     reader.readAsDataURL(file);
   };
+
   const handleSubmit = () => {
-    if (!person1Data.description || !person2Data.description) {
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
-      return;
-    }
-    
-    // Update both API format and legacy format for UI compatibility
-    updateProfileData({ 
-      profile_a: {
-        text: person1Data.description,
-        image_data: person1Data.image_data
-      },
-      profile_b: {
-        text: person2Data.description,
-        image_data: person2Data.image_data
-      },
-      // Keep legacy format for UI compatibility
-      person1: {
-        description: person1Data.description,
-        instagram: person1Data.instagram,
-        vibes: person1Data.vibes
-      },
-      person2: {
-        description: person2Data.description,
-        instagram: person2Data.instagram,
-        vibes: person2Data.vibes
+    if (currentStep === 1) {
+      // Step 1: Validate person1 data and move to step 2
+      if (!person1Data.description) {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+        return;
       }
-    });
-    onNext();
+      setCurrentStep(2);
+    } else {
+      // Step 2: Validate person2 data and proceed to next screen
+      if (!person2Data.description) {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+        return;
+      }
+      
+      // Update both API format and legacy format for UI compatibility
+      updateProfileData({ 
+        profile_a: {
+          text: person1Data.description,
+          image_data: person1Data.image_data
+        },
+        profile_b: {
+          text: person2Data.description,
+          image_data: person2Data.image_data
+        },
+        // Keep legacy format for UI compatibility
+        person1: {
+          description: person1Data.description,
+          instagram: person1Data.instagram,
+          vibes: person1Data.vibes
+        },
+        person2: {
+          description: person2Data.description,
+          instagram: person2Data.instagram,
+          vibes: person2Data.vibes
+        }
+      });
+      onNext();
+    }
   };
 
   const useFakeProfile = (person: 'person1' | 'person2') => {
@@ -144,6 +156,10 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
     }
   };
 
+  const goBackToStep1 = () => {
+    setCurrentStep(1);
+  };
+
   return (
     <motion.div
       className="max-w-4xl mx-auto px-6 py-6"
@@ -151,235 +167,207 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
     >
-      {/* Tab Content */}
+      {/* Main Content */}
       <div className="max-w-2xl mx-auto">
-        {/* Person 1 Tab */}
-        {activeTab === 'person1' && (
-        <motion.div
-          className="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-8 border border-white/20"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ opacity: 0, y: -20 }}
-          key="person1"
-        >
-          {/* Title inside card */}
-          <div className="text-center mb-6">
-            <h1 className="text-xl md:text-2xl font-bold text-white">
-              Tell us about yourselves
-            </h1>
-          </div>
-
-          {/* Tab Navigation inside card */}
-          <div className="flex justify-center mb-6">
-            <div className="bg-white/5 rounded-xl p-1 border border-white/10">
-              <div className="flex gap-1">
-                <motion.button
-                  className={`px-3 py-2 md:px-4 md:py-2 rounded-lg font-medium text-sm transition-all ${
-                    activeTab === 'person1'
-                      ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400/30'
-                      : 'text-white/70 hover:text-white hover:bg-white/5'
-                  }`}
-                  onClick={() => setActiveTab('person1')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Yourself
-                </motion.button>
-                <motion.button
-                  className={`px-3 py-2 md:px-4 md:py-2 rounded-lg font-medium text-sm transition-all ${
-                    activeTab === 'person2'
-                      ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400/30'
-                      : 'text-white/70 hover:text-white hover:bg-white/5'
-                  }`}
-                  onClick={() => setActiveTab('person2')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Your Date
-                </motion.button>
+        <AnimatePresence mode="wait">
+          {/* Step 1: Your Profile */}
+          {currentStep === 1 && (
+            <motion.div
+              className="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-8 border border-pink-400/30"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              key="step1"
+            >
+              {/* Title */}
+              <div className="text-center mb-6">
+                <h1 className="text-xl md:text-2xl font-bold text-white">
+                  Tell us about yourself
+                </h1>
+                <p className="text-white/70 text-sm mt-2">
+                  Start by describing your own profile
+                </p>
               </div>
-            </div>
-          </div>
 
-          {/* Description */}
-          <div className="mb-4 md:mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <label className="text-white/90 font-medium">
-                Describe yourself
-              </label>
-              <motion.button
-                className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white px-2 py-1 md:px-3 md:py-2 rounded-lg text-xs md:text-sm transition-all"
-                onClick={() => useFakeProfile('person1')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Shuffle className="w-3 h-3 md:w-4 md:h-4" />
-                Try example
-              </motion.button>
-            </div>
-            <textarea
-              className="w-full h-24 md:h-32 bg-white/5 border border-white/20 rounded-xl px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white placeholder-white/50 focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 transition-all resize-none"
-              placeholder="E.g., '28F, secretly loves bad karaoke, museum hopper'"
-              value={person1Data.description}
-              onChange={(e) => handleDescriptionChange('person1', e.target.value)}
-              maxLength={200}
-            />
-            <div className="flex justify-end mt-2">
-              <span className={`text-sm ${person1Data.description.length > 180 ? 'text-red-400' : 'text-white/60'}`}>
-                {person1Data.description.length}/200
-              </span>
-            </div>
-          </div>
-
-          {/* Premium Features Coming Soon */}
-          <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-xl p-4 md:p-6 border border-yellow-400/30">
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-yellow-400" />
-              <h3 className="text-lg font-bold text-yellow-300">Premium Features Coming Soon</h3>
-            </div>
-            
-            <div className="space-y-4">
-              {/* Dating Profile Photos */}
-              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Upload className="w-4 h-4 text-white/50" />
-                    <span className="text-white/70 font-medium text-sm">Dating Profile Photos</span>
+              {/* Step Indicator */}
+              <div className="flex justify-center mb-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                    1
                   </div>
-                  <Lock className="w-4 h-4 text-white/30" />
-                </div>
-                <p className="text-white/50 text-xs">Upload multiple photos for better AI analysis</p>
-              </div>
-
-              {/* Instagram Handle */}
-              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Instagram className="w-4 h-4 text-white/50" />
-                    <span className="text-white/70 font-medium text-sm">Instagram Integration</span>
+                  <div className="w-12 h-1 bg-white/20 rounded-full">
+                    <div className="w-full h-full bg-pink-500 rounded-full"></div>
                   </div>
-                  <Lock className="w-4 h-4 text-white/30" />
-                </div>
-                <p className="text-white/50 text-xs">Connect Instagram for deeper personality insights</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-        )}
-
-        {/* Person 2 Tab */}
-        {activeTab === 'person2' && (
-        <motion.div
-          className="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-8 border border-white/20"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ opacity: 0, y: -20 }}
-          key="person2"
-        >
-          {/* Title inside card */}
-          <div className="text-center mb-6">
-            <h1 className="text-xl md:text-2xl font-bold text-white">
-              Tell us about yourselves
-            </h1>
-          </div>
-
-          {/* Tab Navigation inside card */}
-          <div className="flex justify-center mb-6">
-            <div className="bg-white/5 rounded-xl p-1 border border-white/10">
-              <div className="flex gap-1">
-                <motion.button
-                  className={`px-3 py-2 md:px-4 md:py-2 rounded-lg font-medium text-sm transition-all ${
-                    activeTab === 'person1'
-                      ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400/30'
-                      : 'text-white/70 hover:text-white hover:bg-white/5'
-                  }`}
-                  onClick={() => setActiveTab('person1')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Yourself
-                </motion.button>
-                <motion.button
-                  className={`px-3 py-2 md:px-4 md:py-2 rounded-lg font-medium text-sm transition-all ${
-                    activeTab === 'person2'
-                      ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400/30'
-                      : 'text-white/70 hover:text-white hover:bg-white/5'
-                  }`}
-                  onClick={() => setActiveTab('person2')}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Your Date
-                </motion.button>
-              </div>
-            </div>
-          </div>
-
-          {/* Description */}
-          <div className="mb-4 md:mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <label className="text-white/90 font-medium">
-                Describe your date
-              </label>
-              <motion.button
-                className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white px-2 py-1 md:px-3 md:py-2 rounded-lg text-xs md:text-sm transition-all"
-                onClick={() => useFakeProfile('person2')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Shuffle className="w-3 h-3 md:w-4 md:h-4" />
-                Try example
-              </motion.button>
-            </div>
-            <textarea
-              className="w-full h-24 md:h-32 bg-white/5 border border-white/20 rounded-xl px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white placeholder-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all resize-none"
-              placeholder="E.g., 'Adventurous 30M who thinks ramen is a personality trait'"
-              value={person2Data.description}
-              onChange={(e) => handleDescriptionChange('person2', e.target.value)}
-              maxLength={200}
-            />
-            <div className="flex justify-end mt-2">
-              <span className={`text-sm ${person2Data.description.length > 180 ? 'text-red-400' : 'text-white/60'}`}>
-                {person2Data.description.length}/200
-              </span>
-            </div>
-          </div>
-
-          {/* Premium Features Coming Soon */}
-          <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-xl p-4 md:p-6 border border-yellow-400/30">
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-yellow-400" />
-              <h3 className="text-lg font-bold text-yellow-300">Premium Features Coming Soon</h3>
-            </div>
-            
-            <div className="space-y-4">
-              {/* Dating Profile Photos */}
-              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Upload className="w-4 h-4 text-white/50" />
-                    <span className="text-white/70 font-medium text-sm">Dating Profile Photos</span>
+                  <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white/50 font-bold text-sm">
+                    2
                   </div>
-                  <Lock className="w-4 h-4 text-white/30" />
                 </div>
-                <p className="text-white/50 text-xs">Upload multiple photos for better AI analysis</p>
               </div>
 
-              {/* Instagram Handle */}
-              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Instagram className="w-4 h-4 text-white/50" />
-                    <span className="text-white/70 font-medium text-sm">Instagram Integration</span>
-                  </div>
-                  <Lock className="w-4 h-4 text-white/30" />
+              {/* Description */}
+              <div className="mb-4 md:mb-6">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-white/90 font-medium">
+                    Describe yourself
+                  </label>
+                  <motion.button
+                    className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white px-2 py-1 md:px-3 md:py-2 rounded-lg text-xs md:text-sm transition-all"
+                    onClick={() => useFakeProfile('person1')}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Shuffle className="w-3 h-3 md:w-4 md:h-4" />
+                    Try example
+                  </motion.button>
                 </div>
-                <p className="text-white/50 text-xs">Connect Instagram for deeper personality insights</p>
+                <textarea
+                  className="w-full h-24 md:h-32 bg-white/5 border border-white/20 rounded-xl px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white placeholder-white/50 focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 transition-all resize-none"
+                  placeholder="E.g., '28F, secretly loves bad karaoke, museum hopper'"
+                  value={person1Data.description}
+                  onChange={(e) => handleDescriptionChange('person1', e.target.value)}
+                  maxLength={200}
+                />
+                <div className="flex justify-end mt-2">
+                  <span className={`text-sm ${person1Data.description.length > 180 ? 'text-red-400' : 'text-white/60'}`}>
+                    {person1Data.description.length}/200
+                  </span>
+                </div>
               </div>
-            </div>
-          </div>
-        </motion.div>
-        )}
+
+              {/* Premium Features Coming Soon */}
+              <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-xl p-4 md:p-6 border border-yellow-400/30">
+                <div className="flex items-center gap-2 mb-4">
+                  <Sparkles className="w-5 h-5 text-yellow-400" />
+                  <h3 className="text-lg font-bold text-yellow-300">Premium Features Coming Soon</h3>
+                </div>
+                
+                <div className="space-y-4">
+                  {/* Dating Profile Photos */}
+                  <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Upload className="w-4 h-4 text-white/50" />
+                        <span className="text-white/70 font-medium text-sm">Dating Profile Photos</span>
+                      </div>
+                      <Lock className="w-4 h-4 text-white/30" />
+                    </div>
+                    <p className="text-white/50 text-xs">Upload multiple photos for better AI analysis</p>
+                  </div>
+
+                  {/* Instagram Handle */}
+                  <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Instagram className="w-4 h-4 text-white/50" />
+                        <span className="text-white/70 font-medium text-sm">Instagram Integration</span>
+                      </div>
+                      <Lock className="w-4 h-4 text-white/30" />
+                    </div>
+                    <p className="text-white/50 text-xs">Connect Instagram for deeper personality insights</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 2: Other Person's Profile */}
+          {currentStep === 2 && (
+            <motion.div
+              className="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-8 border border-blue-400/30"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              key="step2"
+            >
+              {/* Title */}
+              <div className="text-center mb-6">
+                <h1 className="text-xl md:text-2xl font-bold text-white">
+                  Now, tell us about your potential date
+                </h1>
+                <p className="text-white/70 text-sm mt-2">
+                  This section is for details about the <strong>person</strong> you're going on a date with, not the type of date you want to plan. Think about their dating profile or what you know about them.
+                </p>
+              </div>
+
+              {/* Step Indicator */}
+              <div className="flex justify-center mb-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                    ✓
+                  </div>
+                  <div className="w-12 h-1 bg-pink-500 rounded-full"></div>
+                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                    2
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="mb-4 md:mb-6">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-white/90 font-medium">
+                    Describe the person you're going on a date with
+                  </label>
+                  <motion.button
+                    className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white px-2 py-1 md:px-3 md:py-2 rounded-lg text-xs md:text-sm transition-all"
+                    onClick={() => useFakeProfile('person2')}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Shuffle className="w-3 h-3 md:w-4 md:h-4" />
+                    Try example
+                  </motion.button>
+                </div>
+                <textarea
+                  className="w-full h-24 md:h-32 bg-white/5 border border-white/20 rounded-xl px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white placeholder-white/50 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all resize-none"
+                  placeholder="E.g., 'Adventurous 30M who loves street food and indie bookshops'"
+                  value={person2Data.description}
+                  onChange={(e) => handleDescriptionChange('person2', e.target.value)}
+                  maxLength={200}
+                />
+                <div className="flex justify-end mt-2">
+                  <span className={`text-sm ${person2Data.description.length > 180 ? 'text-red-400' : 'text-white/60'}`}>
+                    {person2Data.description.length}/200
+                  </span>
+                </div>
+              </div>
+
+              {/* Premium Features Coming Soon */}
+              <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-xl p-4 md:p-6 border border-yellow-400/30">
+                <div className="flex items-center gap-2 mb-4">
+                  <Sparkles className="w-5 h-5 text-yellow-400" />
+                  <h3 className="text-lg font-bold text-yellow-300">Premium Features Coming Soon</h3>
+                </div>
+                
+                <div className="space-y-4">
+                  {/* Dating Profile Photos */}
+                  <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Upload className="w-4 h-4 text-white/50" />
+                        <span className="text-white/70 font-medium text-sm">Dating Profile Photos</span>
+                      </div>
+                      <Lock className="w-4 h-4 text-white/30" />
+                    </div>
+                    <p className="text-white/50 text-xs">Upload multiple photos for better AI analysis</p>
+                  </div>
+
+                  {/* Instagram Handle */}
+                  <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Instagram className="w-4 h-4 text-white/50" />
+                        <span className="text-white/70 font-medium text-sm">Instagram Integration</span>
+                      </div>
+                      <Lock className="w-4 h-4 text-white/30" />
+                    </div>
+                    <p className="text-white/50 text-xs">Connect Instagram for deeper personality insights</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Toast Notification */}
@@ -392,12 +380,14 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
         >
           <div className="flex items-center gap-2">
             <AlertCircle className="w-5 h-5" />
-            <span className="font-medium">Please fill in info for both people</span>
+            <span className="font-medium">
+              {currentStep === 1 ? "Please describe yourself first" : "Please describe the other person"}
+            </span>
           </div>
         </motion.div>
       )}
 
-      {/* Continue Button */}
+      {/* Action Buttons */}
       <motion.div
         className="text-center mt-6 md:mt-12 space-y-4"
         initial={{ opacity: 0 }}
@@ -410,12 +400,12 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
           whileTap={{ scale: 0.95 }}
         >
           <span className="relative z-10 flex items-center gap-2">
-            Next: Customize Date
+            {currentStep === 1 ? "Next: Describe Your Date" : "Generate Date Plan"}
             <motion.span
               animate={{ x: [0, 5, 0] }}
               transition={{ duration: 1, repeat: Infinity }}
             >
-              💘
+              {currentStep === 1 ? "👤" : "💘"}
             </motion.span>
           </span>
           <motion.div
@@ -426,18 +416,32 @@ const ProfileInput: React.FC<ProfileInputProps> = ({ profileData, updateProfileD
           />
         </motion.button>
         
-        {/* Back Button */}
-        {onBack && (
-          <motion.button
-            className="flex items-center gap-2 text-white/50 hover:text-white/70 transition-colors text-sm mx-auto"
-            onClick={onBack}
-            whileHover={{ x: -3 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="text-lg">←</span>
-            Back
-          </motion.button>
-        )}
+        {/* Back Buttons */}
+        <div className="flex justify-center gap-4">
+          {currentStep === 2 && (
+            <motion.button
+              className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm"
+              onClick={goBackToStep1}
+              whileHover={{ x: -3 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Your Profile
+            </motion.button>
+          )}
+          
+          {onBack && currentStep === 1 && (
+            <motion.button
+              className="flex items-center gap-2 text-white/50 hover:text-white/70 transition-colors text-sm"
+              onClick={onBack}
+              whileHover={{ x: -3 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="text-lg">←</span>
+              Back
+            </motion.button>
+          )}
+        </div>
       </motion.div>
     </motion.div>
   );
