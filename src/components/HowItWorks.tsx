@@ -188,7 +188,7 @@ meaning and mood.
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
         >
-          <span className="text-white/80">Text or images</span>
+          <span className="text-white/80">Text profiles</span>
           <span className="text-white/60">→</span>
           <span className="text-white/80">psychology</span>
           <span className="text-white/60">→</span>
