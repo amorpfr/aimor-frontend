@@ -490,23 +490,3 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
 };
 
 export default AIProcessing;
-            />
-            <span className="text-white text-sm">🎵 Careless Whisper (8-bit)</span>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Tip */}
-      <motion.p
-        className="text-white/50 text-sm text-center mb-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-      >
-        Pro tip: Click the brain 3 times for a surprise 🎵
-      </motion.p>
-    </motion.div>
-  );
-};
-
-export default AIProcessing;
