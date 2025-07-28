@@ -11,10 +11,27 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
   const [progress, setProgress] = useState(0);
   const [currentTask, setCurrentTask] = useState(0);
   const [brainClicks, setBrainClicks] = useState(0);
-  const [playingMusic, setPlayingMusic] = useState(false);
+  const [showFortuneTeller, setShowFortuneTeller] = useState(false);
+  const [fortuneMessage, setFortuneMessage] = useState('');
   const [requestId, setRequestId] = useState<string | null>(null);
   const [apiProgress, setApiProgress] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Mystical dating fortune messages
+  const fortuneMessages = [
+    "✨ The stars align for a connection deeper than words. Embrace the journey ahead.",
+    "🔮 A shared laugh will unlock a hidden path to joy. Your authentic self is the key.",
+    "💫 Destiny whispers... a new chapter of connection awaits. Be open to the magic.",
+    "🌟 Beyond the ordinary, a spark of magic ignites your path. Trust the unexpected.",
+    "💘 Your heart's true north is guiding you to an unforgettable encounter. Follow its lead.",
+    "🌙 The universe conspires to bring you moments of pure connection. Be present.",
+    "⚡ An exciting synchronicity is on the horizon. Prepare for delightful surprises.",
+    "🎭 Your unique light will attract a kindred spirit. Shine brightly, beautiful soul.",
+    "🗝️ A door to deeper understanding opens soon. Step through with courage.",
+    "🌈 Two souls dancing to the same cosmic rhythm. The music is about to begin.",
+    "🔥 Passion and purpose converge in your near future. Trust the divine timing.",
+    "🦋 Transformation through connection awaits. Allow yourself to be wonderfully surprised."
+  ];
 
   // Utility function to get unique and stable preview messages
   const getUniqueAndStablePreviews = (previews: string[]): string[] => {
@@ -148,8 +165,11 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
   const handleBrainClick = () => {
     setBrainClicks(prev => prev + 1);
     if (brainClicks === 2) {
-      setPlayingMusic(true);
-      setTimeout(() => setPlayingMusic(false), 3000);
+      // Select a random fortune message
+      const randomFortune = fortuneMessages[Math.floor(Math.random() * fortuneMessages.length)];
+      setFortuneMessage(randomFortune);
+      setShowFortuneTeller(true);
+      setTimeout(() => setShowFortuneTeller(false), 5000);
       setBrainClicks(0);
     }
   };
@@ -366,18 +386,110 @@ const AIProcessing: React.FC<AIProcessingProps> = ({ profileData, onNext }) => {
       )}
 
       {/* Easter Egg - Music Player */}
-      {playingMusic && (
+      {/* Easter Egg - Fortune Teller */}
+      {showFortuneTeller && (
         <motion.div
-          className="fixed bottom-6 right-6 bg-black/80 backdrop-blur-md p-4 rounded-xl border border-white/20"
+          className="fixed bottom-6 right-6 bg-gradient-to-br from-purple-900/90 to-pink-900/90 backdrop-blur-md p-6 rounded-2xl border-2 border-yellow-400/50 shadow-2xl max-w-sm"
           initial={{ opacity: 0, scale: 0.8, x: 100 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
           exit={{ opacity: 0, scale: 0.8, x: 100 }}
         >
-          <div className="flex items-center gap-3">
+          <div className="text-center">
             <motion.div
-              className="w-3 h-3 bg-green-400 rounded-full"
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 0.5, repeat: Infinity }}
+              className="text-3xl mb-3"
+              animate={{ 
+                rotate: [0, 5, -5, 0],
+                scale: [1, 1.1, 1]
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              🔮
+            </motion.div>
+            <div className="text-yellow-300 font-bold text-sm mb-2 tracking-wider">
+              COSMIC DATING ORACLE
+            </div>
+            <p className="text-white text-sm leading-relaxed font-medium">
+              {fortuneMessage}
+            </p>
+            <motion.div
+              className="mt-3 flex justify-center gap-1"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              {[...Array(3)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="w-1 h-1 bg-yellow-400 rounded-full"
+                  animate={{ 
+                    scale: [1, 1.5, 1],
+                    opacity: [0.5, 1, 0.5]
+                  }}
+                  transition={{ 
+                    duration: 1.5, 
+                    repeat: Infinity,
+                    delay: i * 0.2
+                  }}
+                />
+              ))}
+            </motion.div>
+          </div>
+          
+          {/* Mystical border glow */}
+          <motion.div
+            className="absolute inset-0 rounded-2xl border-2 border-yellow-400/30"
+            animate={{
+              boxShadow: [
+                "0 0 20px rgba(251, 191, 36, 0.3)",
+                "0 0 40px rgba(251, 191, 36, 0.6)",
+                "0 0 20px rgba(251, 191, 36, 0.3)"
+              ]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          
+          {/* Floating sparkles */}
+          <div className="absolute inset-0 pointer-events-none">
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute text-yellow-400 text-xs"
+                style={{
+                  left: `${20 + i * 15}%`,
+                  top: `${10 + (i % 2) * 80}%`
+                }}
+                animate={{
+                  y: [-5, -15, -5],
+                  opacity: [0.3, 1, 0.3],
+                  scale: [0.8, 1.2, 0.8]
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  delay: i * 0.3
+                }}
+              >
+                ✨
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Tip */}
+      <motion.p
+        className="text-white/50 text-sm text-center mb-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+      >
+        Pro tip: Click the brain 3 times for a mysterious fortune 🔮
+      </motion.p>
+    </motion.div>
+  );
+};
+
+export default AIProcessing;
             />
             <span className="text-white text-sm">🎵 Careless Whisper (8-bit)</span>
           </div>
