@@ -120,39 +120,23 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onBack, onDemo }) => {
       title: "Final Curator",
       subtitle: "OpenAI",
       icon: <Brain className="w-6 h-6" />,
-      description: "Creates a polished date plan — readable, warm, and personal.",
+      description: "Creates a complete date plan with routes, costs, timing, and personal touches.",
       details: [
-        "Formats the plan for app delivery or text sharing",
-        "Adds emotional tone and context",
-        "Includes personality-driven commentary"
+        "Calculates routes, walking distances, and transportation needs",
+        "Estimates costs, timing, and practical logistics",
+        "Adds personality-driven commentary and emotional context",
+        "Formats everything into a polished, shareable date plan"
       ],
       code: `"Looking for something soulful and surprising?
 Start at Foam for visual storytelling, then meander 
 through Nine Streets to find quirky books and café vibes. 
 Cap it off with ramen and jazz — a perfect blend of 
-meaning and mood."`,
+meaning and mood.
+
+💰 Total cost: €55-75 for two
+🚶‍♀️ Walking: 1.5km (15 min total)
+⏰ Duration: 4 hours"`,
       color: "from-orange-500 to-red-500"
-    },
-    {
-      number: 7,
-      title: "Frontend Delivery",
-      subtitle: "FastAPI → Bolt.new UI",
-      icon: <Globe className="w-6 h-6" />,
-      description: "The final curated output is delivered via API to the frontend UI built with Bolt.new.",
-      details: [
-        "JSON formatted for mobile UI built with Bolt.new",
-        "Supports editable elements (time, vibe, budget)",
-        "Delivered in under 30 seconds with error fallback logic",
-        "Beautiful, responsive interface crafted with Bolt.new's AI-powered development"
-      ],
-      code: `// Final delivery to your screen
-{
-  "status": "success",
-  "delivery_time": "28 seconds",
-  "format": "bolt_ui_optimized",
-  "editable": true
-}`,
-      color: "from-indigo-500 to-purple-500"
     }
   ];
 
@@ -186,7 +170,7 @@ meaning and mood."`,
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          In 7 Smart Steps
+          In 6 Smart Steps
         </motion.p>
         
         <motion.p
@@ -195,7 +179,7 @@ meaning and mood."`,
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          From two dating profiles to a culturally intelligent date plan
+          From two text profiles to a culturally intelligent date plan
         </motion.p>
 
         <motion.div
@@ -228,7 +212,7 @@ meaning and mood."`,
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="bg-white/5 rounded-xl p-6 border border-pink-400/30">
-            <h3 className="text-lg font-bold text-pink-300 mb-3">Profile 1 (Text or Image OCR):</h3>
+            <h3 className="text-lg font-bold text-pink-300 mb-3">Profile 1:</h3>
             <p className="text-white/90 italic">
               "I'm into vinyl records, indie movies, moody cafés, and reading Murakami. 
               INFJ if you're into that. Looking for something meaningful."
@@ -236,7 +220,7 @@ meaning and mood."`,
           </div>
 
           <div className="bg-white/5 rounded-xl p-6 border border-blue-400/30">
-            <h3 className="text-lg font-bold text-blue-300 mb-3">Profile 2 (Text or Image OCR):</h3>
+            <h3 className="text-lg font-bold text-blue-300 mb-3">Profile 2:</h3>
             <p className="text-white/90 italic">
               "Weekend explorer. Love street food, underground art shows, and wandering bookshops. 
               ENFP, and yes, I will challenge you to a deep convo."
@@ -246,7 +230,7 @@ meaning and mood."`,
 
         <div className="mt-6 p-4 bg-white/5 rounded-xl border border-white/10">
           <p className="text-white/70 text-sm">
-            <span className="font-medium">🖼️ Optional Input:</span> Images (e.g. profile screenshots) are processed using OCR (OpenAI Vision) → converted to clean text for both profiles.
+            <span className="font-medium">💡 Input Format:</span> Simple text descriptions work perfectly. Premium features like image uploads coming soon!
           </p>
         </div>
       </motion.div>
@@ -261,7 +245,7 @@ meaning and mood."`,
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-white mb-2 flex items-center justify-center gap-3">
             <span className="text-2xl">🚀</span>
-            7-Step Cultural Intelligence Pipeline
+            6-Step Cultural Intelligence Pipeline
           </h2>
         </div>
 
